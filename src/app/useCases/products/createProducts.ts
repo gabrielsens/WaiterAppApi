@@ -5,12 +5,19 @@ import { Product } from '../../models/Product';
 
 export async function createProducts(req: Request, res: Response) {
   try {
-    console.error(req.body);
-    // const { icon, name } = req.body;
+    const imagePath = req.file?.filename;
+    const { name, description, price, category, ingredients } = req.body;
 
-    // const products = await Product.create({ icon, name });
+    const produts = await Product.create({
+      name,
+      description,
+      imagePath,
+      price: Number(price),
+      category,
+      ingredients: ingredients ? JSON.parse(ingredients) : []
+    });
 
-    //res.status(201).json(products);
+    res.status(201).json(produts);
   } catch {
     res.status(500).json({
       error: 'Internal server error'
