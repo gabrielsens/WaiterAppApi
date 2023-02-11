@@ -8,9 +8,10 @@ export async function createOrder(req: Request, res: Response) {
     const { table, products } = req.body;
 
     const order = await Order.create({ table, products });
+    const orderDetails = await order.populate('products.product');
 
+    io.emit('order@new', orderDetails);
     res.status(201).json(order);
-    io.emit('order@new', order);
   } catch {
     res.status(500).json({
       error: 'Internal server error'
